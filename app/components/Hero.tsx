@@ -4,11 +4,26 @@ interface HeroProps {
   title: string
   description: string
   avatar: string
+  banner: string
 }
 
-export function Hero({ title, description, avatar }: HeroProps) {
+const BANNER_FALLBACK = 'https://yt3.googleusercontent.com/x3bPIcrQu1TSnm1BjbVEeStyY3iBG0wwJEx3XvBDwAwiL6Lp0bWluZlE4SS9bXftQStMHqfUp00=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj'
+
+export function Hero({ title, description, avatar, banner }: HeroProps) {
+  const bannerSrc = banner || BANNER_FALLBACK
+
   return (
     <section className="hero" id="hero">
+      <div className="hero-banner">
+        <Image
+          src={bannerSrc}
+          alt=""
+          fill
+          sizes="100vw"
+          priority
+          style={{ objectFit: 'cover' }}
+        />
+      </div>
       {avatar && (
         <Image
           src={avatar}

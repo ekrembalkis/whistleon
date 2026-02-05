@@ -19,6 +19,7 @@ export default async function Home() {
           title={data.stats.channelTitle}
           description={data.stats.channelDescription}
           avatar={data.stats.channelAvatar}
+          banner={data.stats.channelBanner}
         />
         <Stats
           subscribers={data.stats.subscriberCount}
