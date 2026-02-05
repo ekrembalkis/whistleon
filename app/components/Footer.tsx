@@ -1,10 +1,14 @@
+/* eslint-disable @next/next/no-img-element */
 export function Footer() {
   const year = new Date().getFullYear()
 
   return (
     <footer className="footer">
       <div className="footer-content">
-        <div className="footer-logo">WHISTLE ON</div>
+        <div className="footer-logo">
+          <img src="/icon.png" alt="Whistle On" className="footer-logo-img" />
+          WHISTLE ON
+        </div>
         <p className="footer-text">Football means more than just a game ⚽</p>
         <a
           href="https://www.youtube.com/@WhistleOnFootball"

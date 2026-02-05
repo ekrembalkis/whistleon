@@ -4,8 +4,10 @@ export function Nav({ avatar }: { avatar: string }) {
   return (
     <nav className="nav">
       <a href="#" className="nav-logo">
-        {avatar && (
-          <Image src={avatar} alt="Whistle On" width={28} height={28} style={{ borderRadius: '50%' }} />
+        {avatar ? (
+          <Image src={avatar} alt="Whistle On" width={32} height={32} />
+        ) : (
+          <Image src="/icon.png" alt="Whistle On" width={32} height={32} />
         )}
         WHISTLE ON
       </a>

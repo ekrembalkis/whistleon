@@ -216,9 +216,11 @@ body {
 }
 
 .nav-logo img {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
+  border: 2px solid var(--green-primary);
+  box-shadow: 0 0 12px var(--green-glow);
 }
 
 .nav-link {
@@ -256,19 +258,6 @@ body {
   z-index: 1;
 }
 
-.hero-banner {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-}
-
-.hero-banner img {
-  filter: grayscale(100%) brightness(0.6);
-  opacity: 0.15;
-  object-fit: cover;
-  object-position: center;
-}
 
 .hero-avatar {
   width: 140px;
@@ -611,6 +600,18 @@ body {
   font-weight: 800;
   color: var(--green-primary);
   margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.footer-logo-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--green-primary);
+  box-shadow: 0 0 12px var(--green-glow);
 }
 
 .footer-text {
