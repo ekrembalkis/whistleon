@@ -6,7 +6,7 @@ export function Footer() {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-logo">
-          <img src="/icon.png" alt="Whistle On" className="footer-logo-img" />
+          <img src="/logo.png" alt="Whistle On" className="footer-logo-img" />
           WHISTLE ON
         </div>
         <p className="footer-text">Football means more than just a game ⚽</p>

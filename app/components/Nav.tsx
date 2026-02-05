@@ -1,14 +1,10 @@
 import Image from 'next/image'
 
-export function Nav({ avatar }: { avatar: string }) {
+export function Nav() {
   return (
     <nav className="nav">
       <a href="#" className="nav-logo">
-        {avatar ? (
-          <Image src={avatar} alt="Whistle On" width={32} height={32} />
-        ) : (
-          <Image src="/icon.png" alt="Whistle On" width={32} height={32} />
-        )}
+        <Image src="/logo.png" alt="Whistle On" width={32} height={32} />
         WHISTLE ON
       </a>
       <a href="#stats" className="nav-link active">Stats</a>

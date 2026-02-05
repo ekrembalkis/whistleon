@@ -13,12 +13,11 @@ export default async function Home() {
 
   return (
     <>
-      <Nav avatar={data.stats.channelAvatar} />
+      <Nav />
       <main>
         <Hero
           title={data.stats.channelTitle}
           description={data.stats.channelDescription}
-          avatar={data.stats.channelAvatar}
         />
         <Stats
           subscribers={data.stats.subscriberCount}

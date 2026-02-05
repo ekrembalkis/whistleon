@@ -3,22 +3,19 @@ import Image from 'next/image'
 interface HeroProps {
   title: string
   description: string
-  avatar: string
 }
 
-export function Hero({ title, description, avatar }: HeroProps) {
+export function Hero({ title, description }: HeroProps) {
   return (
     <section className="hero" id="hero">
-      {avatar && (
-        <Image
-          src={avatar}
-          alt={title}
-          width={140}
-          height={140}
-          className="hero-avatar"
-          priority
-        />
-      )}
+      <Image
+        src="/logo.png"
+        alt={title}
+        width={140}
+        height={140}
+        className="hero-avatar"
+        priority
+      />
       <h1 className="hero-title">{title}</h1>
       <p className="hero-subtitle">{description}</p>
       <a
