@@ -2,7 +2,7 @@ export function AboutUs() {
   return (
     <section className="about-section" id="about">
       <h2 className="section-title">About Us</h2>
-      <div className="about-card glass liquid-shine animate-target">
+      <div className="about-card glass liquid-shine">
         <div className="about-inner">
           <p>
             Whistle ON is a digital media brand that has been creating football content since 2024, built around one mission. To celebrate the legacy, moments, and magic of football&apos;s greatest ever number 7.
