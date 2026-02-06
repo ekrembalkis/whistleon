@@ -1,3 +1,7 @@
+'use client'
+
+import { useRef, useCallback } from 'react'
+
 interface Playlist {
   id: string
   title: string
@@ -10,7 +14,7 @@ function PlaylistIcon({ title }: { title: string }) {
 
   if (t.includes('speed') || t.includes('ronaldo')) {
     return (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
       </svg>
     )
@@ -18,7 +22,7 @@ function PlaylistIcon({ title }: { title: string }) {
 
   if (t.includes('respect')) {
     return (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
         <path d="M7 15s1.5 2 5 2 5-2 5-2" />
         <line x1="9" y1="9" x2="9.01" y2="9" />
@@ -29,7 +33,7 @@ function PlaylistIcon({ title }: { title: string }) {
 
   if (t.includes('emotional') || t.includes('sad')) {
     return (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
       </svg>
     )
@@ -37,7 +41,7 @@ function PlaylistIcon({ title }: { title: string }) {
 
   if (t.includes('injur')) {
     return (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
       </svg>
     )
@@ -45,10 +49,45 @@ function PlaylistIcon({ title }: { title: string }) {
 
   // Default: football / play icon
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <circle cx="12" cy="12" r="10" />
       <polygon points="10 8 16 12 10 16 10 8" />
     </svg>
+  )
+}
+
+function PlaylistCard({ playlist }: { playlist: Playlist }) {
+  const cardRef = useRef<HTMLAnchorElement>(null)
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    const el = cardRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.width - 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5
+    el.style.transform = `perspective(1000px) rotateY(${x * 16}deg) rotateX(${-y * 16}deg)`
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    if (cardRef.current) cardRef.current.style.transform = ''
+  }, [])
+
+  return (
+    <a
+      ref={cardRef}
+      href={`https://www.youtube.com/playlist?list=${playlist.id}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="glass glass-hover playlist-card card-3d"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="playlist-icon">
+        <PlaylistIcon title={playlist.title} />
+      </div>
+      <h3 className="playlist-title">{playlist.title}</h3>
+      <p className="playlist-count">{playlist.itemCount} videos</p>
+    </a>
   )
 }
 
@@ -61,19 +100,7 @@ export function Playlists({ playlists }: { playlists: Playlist[] }) {
       <p className="section-subtitle">Curated collections of the best football content</p>
       <div className="playlists-grid">
         {playlists.map((playlist) => (
-          <a
-            key={playlist.id}
-            href={`https://www.youtube.com/playlist?list=${playlist.id}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="glass glass-hover playlist-card"
-          >
-            <div className="playlist-icon">
-              <PlaylistIcon title={playlist.title} />
-            </div>
-            <h3 className="playlist-title">{playlist.title}</h3>
-            <p className="playlist-count">{playlist.itemCount} videos</p>
-          </a>
+          <PlaylistCard key={playlist.id} playlist={playlist} />
         ))}
       </div>
     </section>

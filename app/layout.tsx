@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { ParallaxBlobs } from './components/ParallaxBlobs'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
     title: 'Whistle On Football',
     description: 'Football means more than just a game ⚽',
     type: 'website',
+    images: [{ url: '/logo.png' }],
   },
 }
 
@@ -24,11 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="bg-blobs">
-          <div className="blob blob-1" />
-          <div className="blob blob-2" />
-          <div className="blob blob-3" />
-        </div>
+        <ParallaxBlobs />
         {children}
       </body>
     </html>

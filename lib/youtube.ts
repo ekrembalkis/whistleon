@@ -65,9 +65,20 @@ export const FALLBACK_DATA: YouTubeData = {
   fetchedAt: new Date().toISOString(),
 }
 
+async function fetchWithTimeout(url: string, options: RequestInit & { next?: { revalidate: number } } = {}): Promise<Response> {
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 10000)
+  try {
+    const res = await fetch(url, { ...options, signal: controller.signal })
+    return res
+  } finally {
+    clearTimeout(timeout)
+  }
+}
+
 async function fetchChannelStats(apiKey: string): Promise<YouTubeChannelStats> {
   const url = `${API_BASE}/channels?part=snippet,statistics,brandingSettings&id=${CHANNEL_ID}&key=${apiKey}`
-  const res = await fetch(url, { next: { revalidate: 3600 } })
+  const res = await fetchWithTimeout(url, { next: { revalidate: 3600 } })
 
   if (!res.ok) throw new Error(`Channel API failed: ${res.status}`)
 
@@ -76,28 +87,28 @@ async function fetchChannelStats(apiKey: string): Promise<YouTubeChannelStats> {
   if (!channel) throw new Error('Channel not found')
 
   return {
-    subscriberCount: channel.statistics.subscriberCount,
-    viewCount: channel.statistics.viewCount,
-    videoCount: channel.statistics.videoCount,
-    channelTitle: channel.snippet.title,
-    channelDescription: channel.snippet.description,
-    channelAvatar: channel.snippet.thumbnails?.high?.url || channel.snippet.thumbnails?.default?.url || '',
+    subscriberCount: channel.statistics?.subscriberCount || '0',
+    viewCount: channel.statistics?.viewCount || '0',
+    videoCount: channel.statistics?.videoCount || '0',
+    channelTitle: channel.snippet?.title || 'Whistle On',
+    channelDescription: channel.snippet?.description || '',
+    channelAvatar: channel.snippet?.thumbnails?.high?.url || channel.snippet?.thumbnails?.default?.url || '',
     channelBanner: channel.brandingSettings?.image?.bannerExternalUrl || '',
   }
 }
 
 async function fetchRecentVideos(apiKey: string): Promise<YouTubeVideo[]> {
   const searchUrl = `${API_BASE}/search?part=snippet&channelId=${CHANNEL_ID}&order=date&maxResults=12&type=video&key=${apiKey}`
-  const searchRes = await fetch(searchUrl, { next: { revalidate: 3600 } })
+  const searchRes = await fetchWithTimeout(searchUrl, { next: { revalidate: 3600 } })
 
   if (!searchRes.ok) throw new Error(`Search API failed: ${searchRes.status}`)
 
   const searchData = await searchRes.json()
-  const videoIds = searchData.items?.map((item: { id: { videoId: string } }) => item.id.videoId).join(',')
+  const videoIds = searchData.items?.map((item: { id: { videoId: string } }) => item.id?.videoId).filter(Boolean).join(',')
   if (!videoIds) return []
 
   const statsUrl = `${API_BASE}/videos?part=statistics,snippet&id=${videoIds}&key=${apiKey}`
-  const statsRes = await fetch(statsUrl, { next: { revalidate: 3600 } })
+  const statsRes = await fetchWithTimeout(statsUrl, { next: { revalidate: 3600 } })
 
   if (!statsRes.ok) throw new Error(`Video stats API failed: ${statsRes.status}`)
 
@@ -109,16 +120,16 @@ async function fetchRecentVideos(apiKey: string): Promise<YouTubeVideo[]> {
     statistics: { viewCount?: string }
   }) => ({
     id: video.id,
-    title: video.snippet.title,
-    thumbnail: video.snippet.thumbnails?.high?.url || video.snippet.thumbnails?.medium?.url || '',
-    publishedAt: video.snippet.publishedAt,
+    title: video.snippet?.title || '',
+    thumbnail: video.snippet?.thumbnails?.high?.url || video.snippet?.thumbnails?.medium?.url || '',
+    publishedAt: video.snippet?.publishedAt || '',
     viewCount: video.statistics?.viewCount || '0',
   })) || []
 }
 
 async function fetchPlaylists(apiKey: string): Promise<YouTubePlaylist[]> {
   const url = `${API_BASE}/playlists?part=snippet,contentDetails&channelId=${CHANNEL_ID}&maxResults=10&key=${apiKey}`
-  const res = await fetch(url, { next: { revalidate: 3600 } })
+  const res = await fetchWithTimeout(url, { next: { revalidate: 3600 } })
 
   if (!res.ok) throw new Error(`Playlists API failed: ${res.status}`)
 
@@ -130,9 +141,9 @@ async function fetchPlaylists(apiKey: string): Promise<YouTubePlaylist[]> {
     contentDetails: { itemCount: number }
   }) => ({
     id: pl.id,
-    title: pl.snippet.title,
-    thumbnail: pl.snippet.thumbnails?.high?.url || pl.snippet.thumbnails?.medium?.url || '',
-    itemCount: pl.contentDetails.itemCount,
+    title: pl.snippet?.title || '',
+    thumbnail: pl.snippet?.thumbnails?.high?.url || pl.snippet?.thumbnails?.medium?.url || '',
+    itemCount: pl.contentDetails?.itemCount || 0,
   })) || []
 }
 

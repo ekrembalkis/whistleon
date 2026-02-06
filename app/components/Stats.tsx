@@ -10,7 +10,7 @@ interface StatsProps {
 
 function formatNumber(num: number): string {
   if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(2) + 'B'
-  if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + 'M'
+  if (num >= 1_000_000) return (num / 1_000_000).toFixed(2) + 'M'
   if (num >= 1_000) return (num / 1_000).toFixed(1) + 'K'
   return num.toString()
 }
@@ -19,6 +19,7 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
   const [count, setCount] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
   const hasAnimated = useRef(false)
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -30,7 +31,7 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
           const stepTime = duration / steps
           let current = 0
 
-          const timer = setInterval(() => {
+          timerRef.current = setInterval(() => {
             current += 1
             const progress = current / steps
             const eased = 1 - Math.pow(1 - progress, 3)
@@ -38,7 +39,8 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
 
             if (current >= steps) {
               setCount(target)
-              clearInterval(timer)
+              if (timerRef.current) clearInterval(timerRef.current)
+              timerRef.current = null
             }
           }, stepTime)
         }
@@ -47,11 +49,14 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
     )
 
     if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current)
+      observer.disconnect()
+    }
   }, [target])
 
   return (
-    <div ref={ref} className="stat-value counter-animate">
+    <div ref={ref} className="stat-value counter-animate" aria-live="polite">
       {formatNumber(count)}{suffix}
     </div>
   )
@@ -62,25 +67,46 @@ export function Stats({ subscribers, views, videos }: StatsProps) {
   const viewCount = parseInt(views) || 0
   const videoCount = parseInt(videos) || 0
 
+  const milestone = 2_000_000
+  const progressPct = Math.min((subCount / milestone) * 100, 100)
+
   return (
     <section className="stats-section" id="stats">
       <h2 className="section-title">Channel Stats</h2>
       <p className="section-subtitle">Growing every day with the football community</p>
-      <div className="stats-grid">
-        <div className="glass glass-hover liquid-shine stat-card">
-          <span className="stat-icon">👥</span>
+      <div className="stats-dashboard glass liquid-shine">
+        <div className="stat-column">
           <AnimatedCounter target={subCount} />
-          <div className="stat-label">Subscribers</div>
+          <div className="stat-label-group">
+            <div className="stat-label">Subscribers</div>
+            <div className="stat-sublabel">&#8593; trending</div>
+          </div>
+          <div className="stat-milestone">
+            <div className="milestone-bar">
+              <div className="milestone-fill" style={{ width: `${progressPct}%` }} />
+            </div>
+            <div className="milestone-text">{Math.round(progressPct)}% to 2M</div>
+          </div>
         </div>
-        <div className="glass glass-hover liquid-shine stat-card">
-          <span className="stat-icon">👁️</span>
+
+        <div className="stats-divider" />
+
+        <div className="stat-column">
           <AnimatedCounter target={viewCount} />
-          <div className="stat-label">Total Views</div>
+          <div className="stat-label-group">
+            <div className="stat-label">Total Views</div>
+            <div className="stat-sublabel">&#8593; growing fast</div>
+          </div>
         </div>
-        <div className="glass glass-hover liquid-shine stat-card">
-          <span className="stat-icon">🎬</span>
+
+        <div className="stats-divider" />
+
+        <div className="stat-column">
           <AnimatedCounter target={videoCount} />
-          <div className="stat-label">Videos</div>
+          <div className="stat-label-group">
+            <div className="stat-label">Videos</div>
+            <div className="stat-sublabel">Active creator</div>
+          </div>
         </div>
       </div>
     </section>
