@@ -521,36 +521,108 @@ body {
   box-shadow: 0 0 12px var(--green-primary);
 }
 
-/* Milestone progress bar */
-.stat-milestone {
-  margin-top: 1rem;
+/* ============ REQUEST FORM SECTION ============ */
+.request-section {
+  padding: 4rem 2rem 6rem;
+  position: relative;
+  z-index: 1;
+}
+
+.request-form {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.request-form-inner {
   position: relative;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.milestone-bar {
+.request-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.request-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--white-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.request-input {
   width: 100%;
-  max-width: 200px;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-  overflow: hidden;
-  margin: 0 auto;
+  padding: 0.85rem 1.1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--white-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.milestone-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--green-dark), var(--green-primary));
-  border-radius: 3px;
-  box-shadow: 0 0 8px var(--green-glow);
-  transition: width 2s cubic-bezier(0.16, 1, 0.3, 1);
+.request-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
 }
 
-.milestone-text {
-  font-size: 0.7rem;
-  color: var(--white-muted);
-  margin-top: 0.4rem;
-  letter-spacing: 0.05em;
+.request-input:focus {
+  border-color: var(--green-primary);
+  box-shadow: 0 0 16px rgba(0, 255, 135, 0.15);
+}
+
+.request-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.request-submit {
+  align-self: flex-start;
+  padding: 0.85rem 2.5rem;
+  border-radius: 50px;
+  border: none;
+  background: linear-gradient(135deg, var(--green-primary), var(--green-dark));
+  color: var(--black-primary);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+  box-shadow: 0 4px 24px var(--green-glow);
+}
+
+.request-submit:hover {
+  box-shadow: 0 8px 40px rgba(0, 255, 135, 0.4);
+}
+
+.request-submit:active {
+  transform: scale(0.97);
+}
+
+.request-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.request-status {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.request-success {
+  color: var(--green-primary);
+}
+
+.request-error {
+  color: #ff6b6b;
 }
 
 /* ============ VIDEOS SECTION ============ */
@@ -1056,6 +1128,10 @@ body {
   .playlists-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
+  }
+
+  .request-form {
+    padding: 1.5rem;
   }
 }
 

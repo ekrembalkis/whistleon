@@ -67,9 +67,6 @@ export function Stats({ subscribers, views, videos }: StatsProps) {
   const viewCount = parseInt(views) || 0
   const videoCount = parseInt(videos) || 0
 
-  const milestone = 2_000_000
-  const progressPct = Math.min((subCount / milestone) * 100, 100)
-
   return (
     <section className="stats-section" id="stats">
       <h2 className="section-title">Channel Stats</h2>
@@ -79,12 +76,6 @@ export function Stats({ subscribers, views, videos }: StatsProps) {
           <AnimatedCounter target={subCount} />
           <div className="stat-label-group">
             <div className="stat-label">Subscribers</div>
-          </div>
-          <div className="stat-milestone">
-            <div className="milestone-bar">
-              <div className="milestone-fill" style={{ width: `${progressPct}%` }} />
-            </div>
-            <div className="milestone-text">{Math.round(progressPct)}% to 2M</div>
           </div>
         </div>
 

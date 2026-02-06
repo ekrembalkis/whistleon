@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
-const sections = ['hero', 'stats', 'videos', 'playlists'] as const
+const sections = ['hero', 'stats', 'videos', 'playlists', 'request'] as const
 
 export function Nav() {
   const [activeSection, setActiveSection] = useState<string>('hero')
@@ -37,6 +37,7 @@ export function Nav() {
       <a href="#stats" className={`nav-link${activeSection === 'stats' ? ' active' : ''}`}>Stats</a>
       <a href="#videos" className={`nav-link${activeSection === 'videos' ? ' active' : ''}`}>Videos</a>
       <a href="#playlists" className={`nav-link${activeSection === 'playlists' ? ' active' : ''}`}>Playlists</a>
+      <a href="#request" className={`nav-link${activeSection === 'request' ? ' active' : ''}`}>Request</a>
     </nav>
   )
 }
