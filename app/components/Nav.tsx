@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 
-const sections = ['hero', 'stats', 'videos', 'playlists', 'about', 'request'] as const
+const sections = ['hero', 'stats', 'videos', 'shorts', 'playlists', 'featured', 'about', 'request'] as const
 
 export function Nav() {
   const [activeSection, setActiveSection] = useState<string>('hero')
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -28,17 +29,78 @@ export function Nav() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
+
+  const closeMenu = useCallback(() => setMenuOpen(false), [])
+
+  const navLinks = [
+    { id: 'stats', label: 'Stats' },
+    { id: 'videos', label: 'Videos' },
+    { id: 'shorts', label: 'Shorts' },
+    { id: 'playlists', label: 'Playlists' },
+    { id: 'featured', label: 'Featured' },
+    { id: 'about', label: 'About' },
+    { id: 'request', label: 'Request' },
+  ]
+
   return (
-    <nav className="nav">
-      <a href="/" className="nav-logo">
-        <Image src="/logo.png" alt="Whistle On" width={32} height={32} />
-        WHISTLE ON
-      </a>
-      <a href="#stats" className={`nav-link${activeSection === 'stats' ? ' active' : ''}`}>Stats</a>
-      <a href="#videos" className={`nav-link${activeSection === 'videos' ? ' active' : ''}`}>Videos</a>
-      <a href="#playlists" className={`nav-link${activeSection === 'playlists' ? ' active' : ''}`}>Playlists</a>
-      <a href="#about" className={`nav-link${activeSection === 'about' ? ' active' : ''}`}>About</a>
-      <a href="#request" className={`nav-link${activeSection === 'request' ? ' active' : ''}`}>Request</a>
-    </nav>
+    <>
+      <nav className="nav">
+        <a href="/" className="nav-logo">
+          <Image src="/logo.png" alt="Whistle On" width={32} height={32} />
+          WHISTLE ON
+        </a>
+        {navLinks.map((link) => (
+          <a
+            key={link.id}
+            href={`#${link.id}`}
+            className={`nav-link${activeSection === link.id ? ' active' : ''}`}
+          >
+            {link.label}
+          </a>
+        ))}
+        <button
+          className="hamburger-btn"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+        >
+          <span className={`hamburger-icon${menuOpen ? ' open' : ''}`}>
+            <span />
+            <span />
+            <span />
+          </span>
+        </button>
+      </nav>
+
+      {menuOpen && (
+        <div className="mobile-menu-overlay" onClick={closeMenu}>
+          <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
+            <button className="mobile-menu-close" onClick={closeMenu} aria-label="Close menu">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+            {navLinks.map((link) => (
+              <a
+                key={link.id}
+                href={`#${link.id}`}
+                className={`mobile-menu-link${activeSection === link.id ? ' active' : ''}`}
+                onClick={closeMenu}
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
   )
 }

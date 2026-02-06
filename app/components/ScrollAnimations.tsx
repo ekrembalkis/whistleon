@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 
 export function ScrollAnimations() {
   useEffect(() => {
-    const targets = document.querySelectorAll('section, .video-card, .playlist-card')
+    const targets = document.querySelectorAll('section, .video-card, .playlist-card, .featured-card, .shorts-card')
     targets.forEach((el) => el.classList.add('animate-target'))
 
     const observer = new IntersectionObserver(
