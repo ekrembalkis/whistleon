@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useCallback, useState, useMemo } from 'react'
+import { useRef, useCallback, useState } from 'react'
 import Image from 'next/image'
 import { VideoModal } from './VideoModal'
 
@@ -88,20 +88,14 @@ function FeaturedCard({ video, onClick }: { video: Video; onClick: () => void })
 export function Featured({ videos }: { videos: Video[] }) {
   const [modalVideoId, setModalVideoId] = useState<string | null>(null)
 
-  const topVideos = useMemo(() => {
-    return [...videos]
-      .sort((a, b) => parseInt(b.viewCount || '0') - parseInt(a.viewCount || '0'))
-      .slice(0, 4)
-  }, [videos])
-
-  if (!topVideos.length) return null
+  if (!videos.length) return null
 
   return (
     <section className="featured-section" id="featured">
       <h2 className="section-title">Fan Favorites</h2>
       <p className="section-subtitle">The most-watched moments our fans can&apos;t stop replaying</p>
       <div className="featured-grid">
-        {topVideos.map((video) => (
+        {videos.map((video) => (
           <FeaturedCard
             key={video.id}
             video={video}

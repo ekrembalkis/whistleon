@@ -2,7 +2,6 @@ import { Nav } from './components/Nav'
 import { Hero } from './components/Hero'
 import { Stats } from './components/Stats'
 import { ShortsCarousel } from './components/ShortsCarousel'
-import { Playlists } from './components/Playlists'
 import { Featured } from './components/Featured'
 import { AboutUs } from './components/AboutUs'
 import { Newsletter } from './components/Newsletter'
@@ -38,9 +37,7 @@ export default async function Home() {
         <div className="section-divider" />
         <ShortsCarousel videos={data.videos} />
         <div className="section-divider" />
-        <Playlists playlists={data.playlists} />
-        <div className="section-divider" />
-        <Featured videos={data.videos} />
+        <Featured videos={data.popularVideos} />
         <div className="section-divider" />
         <AboutUs />
         <div className="section-divider" />

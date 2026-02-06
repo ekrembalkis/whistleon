@@ -29,6 +29,7 @@ export interface YouTubePlaylist {
 export interface YouTubeData {
   stats: YouTubeChannelStats
   videos: YouTubeVideo[]
+  popularVideos: YouTubeVideo[]
   playlists: YouTubePlaylist[]
   cached: boolean
   fetchedAt: string
@@ -53,6 +54,12 @@ export const FALLBACK_DATA: YouTubeData = {
     { id: '6', title: "Ronaldo and Son's Change Over Time", thumbnail: '', publishedAt: '2026-01-18', viewCount: '4800000' },
     { id: '7', title: 'Ronaldo Finally Respects IShowSpeed', thumbnail: '', publishedAt: '2026-02-01', viewCount: '2500000' },
     { id: '8', title: 'Players Level 1 vs Level 100 Gifts', thumbnail: '', publishedAt: '2026-02-02', viewCount: '655000' },
+  ],
+  popularVideos: [
+    { id: '1', title: 'Ronaldo Respects This Kid More Than Miss Portugal', thumbnail: '', publishedAt: '2025-12-20', viewCount: '100000000' },
+    { id: '4', title: 'Ronaldo Level 0 vs Level 999 Ball Control', thumbnail: '', publishedAt: '2026-01-10', viewCount: '10000000' },
+    { id: '2', title: 'IShowSpeed and Football Players Cold Bath Challenge + HIM', thumbnail: '', publishedAt: '2025-12-22', viewCount: '14000000' },
+    { id: '3', title: 'Ronaldo Celebration Made Her Stop', thumbnail: '', publishedAt: '2025-12-28', viewCount: '9800000' },
   ],
   playlists: [
     { id: 'pl1', title: 'IShowSpeed x Ronaldo', thumbnail: '', itemCount: 25 },
@@ -127,6 +134,36 @@ async function fetchRecentVideos(apiKey: string): Promise<YouTubeVideo[]> {
   })) || []
 }
 
+async function fetchPopularVideos(apiKey: string): Promise<YouTubeVideo[]> {
+  const searchUrl = `${API_BASE}/search?part=snippet&channelId=${CHANNEL_ID}&order=viewCount&maxResults=4&type=video&key=${apiKey}`
+  const searchRes = await fetchWithTimeout(searchUrl, { next: { revalidate: 3600 } })
+
+  if (!searchRes.ok) throw new Error(`Popular search API failed: ${searchRes.status}`)
+
+  const searchData = await searchRes.json()
+  const videoIds = searchData.items?.map((item: { id: { videoId: string } }) => item.id?.videoId).filter(Boolean).join(',')
+  if (!videoIds) return []
+
+  const statsUrl = `${API_BASE}/videos?part=statistics,snippet&id=${videoIds}&key=${apiKey}`
+  const statsRes = await fetchWithTimeout(statsUrl, { next: { revalidate: 3600 } })
+
+  if (!statsRes.ok) throw new Error(`Popular video stats API failed: ${statsRes.status}`)
+
+  const statsData = await statsRes.json()
+
+  return statsData.items?.map((video: {
+    id: string
+    snippet: { title: string; thumbnails: { high?: { url: string }; medium?: { url: string }; default?: { url: string } }; publishedAt: string }
+    statistics: { viewCount?: string }
+  }) => ({
+    id: video.id,
+    title: video.snippet?.title || '',
+    thumbnail: video.snippet?.thumbnails?.high?.url || video.snippet?.thumbnails?.medium?.url || '',
+    publishedAt: video.snippet?.publishedAt || '',
+    viewCount: video.statistics?.viewCount || '0',
+  })) || []
+}
+
 async function fetchPlaylists(apiKey: string): Promise<YouTubePlaylist[]> {
   const url = `${API_BASE}/playlists?part=snippet,contentDetails&channelId=${CHANNEL_ID}&maxResults=10&key=${apiKey}`
   const res = await fetchWithTimeout(url, { next: { revalidate: 3600 } })
@@ -155,15 +192,17 @@ export async function getYouTubeData(): Promise<YouTubeData> {
   }
 
   try {
-    const [stats, videos, playlists] = await Promise.all([
+    const [stats, videos, popularVideos, playlists] = await Promise.all([
       fetchChannelStats(apiKey),
       fetchRecentVideos(apiKey),
+      fetchPopularVideos(apiKey),
       fetchPlaylists(apiKey),
     ])
 
     return {
       stats,
       videos,
+      popularVideos,
       playlists,
       cached: false,
       fetchedAt: new Date().toISOString(),
