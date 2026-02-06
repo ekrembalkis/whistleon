@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 
-const sections = ['hero', 'stats', 'videos', 'shorts', 'playlists', 'featured', 'about', 'request'] as const
+const sections = ['hero', 'stats', 'shorts', 'playlists', 'featured', 'about', 'request'] as const
 
 export function Nav() {
   const [activeSection, setActiveSection] = useState<string>('hero')
@@ -42,7 +42,6 @@ export function Nav() {
 
   const navLinks = [
     { id: 'stats', label: 'Stats' },
-    { id: 'videos', label: 'Videos' },
     { id: 'shorts', label: 'Shorts' },
     { id: 'playlists', label: 'Playlists' },
     { id: 'featured', label: 'Featured' },

@@ -1,7 +1,6 @@
 import { Nav } from './components/Nav'
 import { Hero } from './components/Hero'
 import { Stats } from './components/Stats'
-import { Videos } from './components/Videos'
 import { ShortsCarousel } from './components/ShortsCarousel'
 import { Playlists } from './components/Playlists'
 import { Featured } from './components/Featured'
@@ -36,8 +35,6 @@ export default async function Home() {
           views={data.stats.viewCount}
           videos={data.stats.videoCount}
         />
-        <div className="section-divider" />
-        <Videos videos={data.videos} />
         <div className="section-divider" />
         <ShortsCarousel videos={data.videos} />
         <div className="section-divider" />
