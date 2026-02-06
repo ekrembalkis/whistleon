@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useCallback, useState } from 'react'
+import { useRef, useCallback, useState, useEffect } from 'react'
 import Image from 'next/image'
 import { VideoModal } from './VideoModal'
 
@@ -28,8 +28,14 @@ function formatDate(dateStr: string): string {
 
 function VideoCard({ video, onClick }: { video: Video; onClick: () => void }) {
   const cardRef = useRef<HTMLDivElement>(null)
+  const isTouchDevice = useRef(false)
+
+  useEffect(() => {
+    isTouchDevice.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+  }, [])
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (isTouchDevice.current) return
     const el = cardRef.current
     if (!el) return
     const rect = el.getBoundingClientRect()

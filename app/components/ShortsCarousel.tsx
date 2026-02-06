@@ -58,6 +58,28 @@ export function ShortsCarousel({ videos }: { videos: Video[] }) {
     setTimeout(() => { dragState.current.moved = false }, 0)
   }, [])
 
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    const track = trackRef.current
+    if (!track) return
+    dragState.current = {
+      startX: e.touches[0].pageX - track.offsetLeft,
+      scrollLeft: track.scrollLeft,
+      moved: false,
+    }
+  }, [])
+
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    const track = trackRef.current
+    if (!track) return
+    const x = e.touches[0].pageX - track.offsetLeft
+    const walk = x - dragState.current.startX
+    if (Math.abs(walk) > 10) dragState.current.moved = true
+  }, [])
+
+  const onTouchEnd = useCallback(() => {
+    setTimeout(() => { dragState.current.moved = false }, 0)
+  }, [])
+
   const handleCardClick = useCallback((videoId: string) => {
     if (!dragState.current.moved) {
       setModalVideoId(videoId)
@@ -83,6 +105,9 @@ export function ShortsCarousel({ videos }: { videos: Video[] }) {
           onMouseMove={onMouseMove}
           onMouseUp={onMouseUp}
           onMouseLeave={onMouseUp}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
         >
           {shorts.map((video) => (
             <div

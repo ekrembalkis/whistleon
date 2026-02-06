@@ -367,6 +367,7 @@ body {
 /* ============ HERO SECTION ============ */
 .hero {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1620,6 +1621,10 @@ body {
 
 /* ============ RESPONSIVE ============ */
 @media (max-width: 768px) {
+  html {
+    scroll-padding-top: 60px;
+  }
+
   .nav {
     top: 1rem;
     padding: 0.4rem;
@@ -1634,6 +1639,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
   }
 
   .nav-logo {
@@ -1648,6 +1655,61 @@ body {
   .hero-avatar {
     width: 100px;
     height: 100px;
+  }
+
+  /* Performance: reduce blob complexity */
+  .blob {
+    filter: blur(80px);
+    opacity: 0.25;
+    animation: none;
+    will-change: auto;
+  }
+
+  .blob-1 {
+    width: 300px;
+    height: 300px;
+  }
+
+  .blob-2 {
+    width: 250px;
+    height: 250px;
+  }
+
+  .blob-3 {
+    display: none;
+  }
+
+  /* Performance: reduce glass blur */
+  .glass {
+    backdrop-filter: blur(10px) saturate(150%);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
+  }
+
+  /* Performance: disable expensive animations */
+  .liquid-shine::after { animation: none; }
+  .shimmer::after { animation: none; }
+  .section-divider::after { animation: none; }
+
+  /* Performance: remove will-change on mobile */
+  .card-3d { will-change: auto; }
+  .hero-title { will-change: auto; }
+
+  /* Make play buttons visible on touch devices */
+  .video-play-btn { opacity: 0.8; }
+  .shorts-play { opacity: 0.8; }
+
+  /* Video modal mobile layout */
+  .video-modal-overlay {
+    padding: 1rem;
+    align-items: flex-start;
+    padding-top: 4rem;
+  }
+
+  .video-modal-close {
+    top: -44px;
+    right: 0;
+    width: 44px;
+    height: 44px;
   }
 
   /* Stats dashboard mobile: stack vertically */
@@ -1702,7 +1764,25 @@ body {
   }
 }
 
+@media (max-width: 640px) {
+  .videos-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 480px) {
+  .hero {
+    padding: 4.5rem 1.25rem 2.5rem;
+  }
+
+  .hero-subtitle {
+    margin-bottom: 2rem;
+  }
+
+  .hero-scroll-indicator {
+    bottom: 1rem;
+  }
+
   .playlists-grid {
     grid-template-columns: 1fr;
   }
@@ -1725,6 +1805,10 @@ body {
 
   .newsletter-submit {
     width: 100%;
+  }
+
+  .newsletter-card {
+    padding: 2rem 1.25rem;
   }
 }
 

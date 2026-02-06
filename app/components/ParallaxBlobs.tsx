@@ -8,6 +8,9 @@ export function ParallaxBlobs() {
   const blob3 = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    const isMobile = window.matchMedia('(max-width: 768px)').matches
+    if (isMobile) return
+
     const onScroll = () => {
       const y = window.scrollY
       if (blob1.current) blob1.current.style.transform = `translateY(${y * 0.03}px)`

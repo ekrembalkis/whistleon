@@ -20,6 +20,7 @@ export function Hero({ title, description }: HeroProps) {
   }, [words.length])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if ('ontouchstart' in window) return
     const btn = ctaRef.current
     if (!btn) return
     const rect = btn.getBoundingClientRect()
