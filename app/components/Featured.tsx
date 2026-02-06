@@ -41,6 +41,7 @@ function FeaturedCard({ video, onClick }: { video: Video; onClick: () => void })
       ref={cardRef}
       className="glass glass-hover featured-card card-3d"
       onClick={onClick}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick() } }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       role="button"

@@ -55,6 +55,7 @@ export function ShortsCarousel({ videos }: { videos: Video[] }) {
 
   const onMouseUp = useCallback(() => {
     setIsDragging(false)
+    setTimeout(() => { dragState.current.moved = false }, 0)
   }, [])
 
   const handleCardClick = useCallback((videoId: string) => {
@@ -88,6 +89,7 @@ export function ShortsCarousel({ videos }: { videos: Video[] }) {
               key={video.id}
               className="shorts-card glass glass-hover"
               onClick={() => handleCardClick(video.id)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleCardClick(video.id) } }}
               role="button"
               tabIndex={0}
             >

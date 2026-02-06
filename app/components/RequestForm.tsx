@@ -49,6 +49,8 @@ export function RequestForm() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
+              maxLength={100}
+              disabled={status === 'sending'}
             />
           </div>
 
@@ -62,6 +64,8 @@ export function RequestForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              maxLength={254}
+              disabled={status === 'sending'}
             />
           </div>
 
@@ -75,6 +79,8 @@ export function RequestForm() {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               required
+              maxLength={2000}
+              disabled={status === 'sending'}
             />
           </div>
 
