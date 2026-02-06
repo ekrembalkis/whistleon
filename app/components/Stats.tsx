@@ -79,7 +79,6 @@ export function Stats({ subscribers, views, videos }: StatsProps) {
           <AnimatedCounter target={subCount} />
           <div className="stat-label-group">
             <div className="stat-label">Subscribers</div>
-            <div className="stat-sublabel">&#8593; trending</div>
           </div>
           <div className="stat-milestone">
             <div className="milestone-bar">
@@ -95,7 +94,6 @@ export function Stats({ subscribers, views, videos }: StatsProps) {
           <AnimatedCounter target={viewCount} />
           <div className="stat-label-group">
             <div className="stat-label">Total Views</div>
-            <div className="stat-sublabel">&#8593; growing fast</div>
           </div>
         </div>
 
@@ -105,7 +103,6 @@ export function Stats({ subscribers, views, videos }: StatsProps) {
           <AnimatedCounter target={videoCount} />
           <div className="stat-label-group">
             <div className="stat-label">Videos</div>
-            <div className="stat-sublabel">Active creator</div>
           </div>
         </div>
       </div>
