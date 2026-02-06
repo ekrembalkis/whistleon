@@ -3,6 +3,7 @@ import { Hero } from './components/Hero'
 import { Stats } from './components/Stats'
 import { Videos } from './components/Videos'
 import { Playlists } from './components/Playlists'
+import { AboutUs } from './components/AboutUs'
 import { RequestForm } from './components/RequestForm'
 import { Footer } from './components/Footer'
 import { ScrollProgress } from './components/ScrollProgress'
@@ -35,6 +36,8 @@ export default async function Home() {
         <Videos videos={data.videos} />
         <div className="section-divider" />
         <Playlists playlists={data.playlists} />
+        <div className="section-divider" />
+        <AboutUs />
         <div className="section-divider" />
         <RequestForm />
       </main>
